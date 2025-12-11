@@ -1,3 +1,4 @@
+const { validator, createItemSchema } = require("../validators/item.validator");
 const ItemsModel = require("./../models/Item");
 
 exports.getAllItems = async (req, res) => {
@@ -10,6 +11,14 @@ exports.getAllItems = async (req, res) => {
 };
 
 exports.createItem = async (req, res) => {
+    const validate = validator.validate(req.body, createItemSchema);
+
+    if (validate !== true) {
+        return res
+            .status(422)
+            .json({ message: "Validation failed", errors: validate });
+    }
+
     try {
         const {
             name,
