@@ -1,0 +1,56 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.cache/
+.next/
+out/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Optional PM2 logs
+.pids
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage directory used by testing tools
+coverage/
+
+# Misc
+.DS_Store
+Thumbs.db
+
+# VSCode settings
+.vscode/
