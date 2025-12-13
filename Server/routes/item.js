@@ -1,5 +1,10 @@
 const express = require("express");
-const controller = require("./../controllers/item");
+const controller = require("../controllers/item");
+const validate = require("../middlewares/validate");
+const {
+    validateCreateItem,
+    validateUpdateItem,
+} = require("../validators/item.validator");
 
 const router = express.Router();
 
@@ -18,8 +23,13 @@ const router = express.Router();
  *     tags: [Items]
  *     responses:
  *       200:
- *         description: List of items.
- *
+ *         description: List of items
+ */
+router.get("/", controller.getAllItems);
+
+/**
+ * @swagger
+ * /items:
  *   post:
  *     summary: Create a new item
  *     tags: [Items]
@@ -29,6 +39,10 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - name
+ *               - category
+ *               - price
  *             properties:
  *               name:
  *                 type: string
@@ -61,9 +75,84 @@ const router = express.Router();
  *                 example: "https://example.com/latte.png"
  *     responses:
  *       201:
- *         description: Item created successfully.
+ *         description: Item created successfully
+ *       400:
+ *         description: Validation error
  */
-router.get("/", controller.getAllItems);
-router.post("/", controller.createItem);
+router.post("/", validate(validateCreateItem), controller.createItem);
+
+/**
+ * @swagger
+ * /items/{id}:
+ *   put:
+ *     summary: Update an item
+ *     tags: [Items]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Item ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               ingredients:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               category:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               hasDiscount:
+ *                 type: boolean
+ *               discount:
+ *                 type: object
+ *                 properties:
+ *                   percent:
+ *                     type: number
+ *                   oldPrice:
+ *                     type: number
+ *               imageUrl:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Item updated successfully
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: Item not found
+ */
+router.put("/:id", validate(validateUpdateItem), controller.updateItem);
+
+/**
+ * @swagger
+ * /items/{id}:
+ *   delete:
+ *     summary: Remove an item
+ *     tags: [Items]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Item ID
+ *     responses:
+ *       200:
+ *         description: Item removed successfully
+ *       400:
+ *         description: Invalid ID
+ *       404:
+ *         description: Item not found
+ */
+router.delete("/:id", controller.removeItem);
 
 module.exports = router;
